@@ -1,8 +1,7 @@
 const router = require('express').Router();
-
 const fs = require('fs');
-
 const db = require('./../db/db.json');
+const {v4: uuidv4} = require('uuid');
 
 router.get('/notes', (req, res) => {
     // read db.json to get the saved notes
@@ -13,10 +12,9 @@ router.post('/notes', (req, res) => {
     // receive new note from request body
     let newNote = req.body;
     // add unique ID to new note
-    newNote.id = 'unique ID';          // need to add this later
+    newNote.id = uuidv4();
     // add new note to saved notes
     let savedNotes = db;
-    console.log(savedNotes);
     savedNotes.push(newNote);
     // push new saved notes array to db.json
     savedNotes = JSON.stringify(savedNotes)
@@ -24,7 +22,7 @@ router.post('/notes', (req, res) => {
         if (err) {
             console.error(err);
         } else {
-            console.log('replaced db.json');
+            console.log('added new note to db.json');
             // return new note to client
             res.json(newNote);
         };

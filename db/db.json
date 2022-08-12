@@ -1,1 +1,1 @@
-[{"title":"Test Title","text":"Test text"},{"title":"Brett adding","text":"dummy text","id":"unique ID"}]
+[{"title":"Test Title","text":"Test text"},{"title":"Brett adding","text":"dummy text","id":"unique ID"},{"title":"Note w/ id","text":"this one should come back with a uuid","id":"ac71bd2e-6f94-4bf1-b92f-91b7938efd67"},{"title":"Note w/ id","text":"this one should come back with a uuid","id":"ba50b131-21f4-43c5-abb9-c8db0b747ee4"}]
