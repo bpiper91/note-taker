@@ -36,12 +36,26 @@ router.post('/notes', (req, res) => {
 });
 
 // delete a note
-// router.delete('notes/:id', (req, res) => {
-//     // receive query param of id
-//     // read saved notes
-//     // filter saved notes by id
-//     // rewrite saved notes to remove selected id
-//     // return saved notes to client
-// });
+router.delete('/notes/:id', (req, res) => {
+    // receive query param of id
+    const deleteID = req.params.id;
+
+    // read db.json and store parsed array of saved notes 
+    let savedNotes = JSON.parse(fs.readFileSync('db/db.json'));
+    
+    // filter notes by the delete id to create a new array
+    let newSavedNotes = savedNotes.filter(note => note.id != deleteID);
+
+    // get title of deleted note
+    const deletedNote = savedNotes.filter(note => note.id == deleteID);
+    const deletedTitle = deletedNote[0].title;
+    
+    // rewrite saved notes array to exclude selected id
+    fs.writeFileSync('db/db.json', JSON.stringify(newSavedNotes))
+            
+    // alert user to deletion and send back the updated array of notes
+    console.log(`note '${deletedTitle}' deleted`);
+    res.json(newSavedNotes);
+});
 
 module.exports = router;
