@@ -78,12 +78,8 @@ router.delete('/notes/:id', (req, res) => {
             })
         };
     })
-    .then(newSavedNotes => {
-        res.json(JSON.stringify(newSavedNotes));
-    })
-    .catch(err => {
-        console.error(err);
-    });
+    .then(newSavedNotes => res.json(newSavedNotes))
+    .catch(err => console.error(err));
 });
 
 module.exports = router;
