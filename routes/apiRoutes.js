@@ -5,7 +5,7 @@ const fs = require('fs');
 // link db.json for saved notes
 const db = require('./../db/db.json');
 // load uuid for unique IDs
-const {v4: uuidv4} = require('uuid');
+const { v4: uuidv4 } = require('uuid');
 
 // get existing notes
 router.get('/notes', (req, res) => {
@@ -40,22 +40,50 @@ router.delete('/notes/:id', (req, res) => {
     // receive query param of id
     const deleteID = req.params.id;
 
-    // read db.json and store parsed array of saved notes 
-    let savedNotes = JSON.parse(fs.readFileSync('db/db.json'));
-    
-    // filter notes by the delete id to create a new array
-    let newSavedNotes = savedNotes.filter(note => note.id != deleteID);
+    // use fs.readFile
+    // 
+    return new Promise((resolve, reject) => {
+        fs.readFile('db/db.json', 'utf8', (err, data) => {
+            if (err) {
+                reject(err);
+                return
+            };
 
-    // get title of deleted note
-    const deletedNote = savedNotes.filter(note => note.id == deleteID);
-    const deletedTitle = deletedNote[0].title;
-    
-    // rewrite saved notes array to exclude selected id
-    fs.writeFileSync('db/db.json', JSON.stringify(newSavedNotes))
-            
-    // alert user to deletion and send back the updated array of notes
-    console.log(`note '${deletedTitle}' deleted`);
-    res.json(newSavedNotes);
+            // parse db.json into savedNotes array
+            const savedNotes = JSON.parse(data);
+            // filter out note with delete id and save as newSavedNotes array
+            let newSavedNotes = savedNotes.filter(note => note.id != deleteID);
+
+            // get title of deleted note
+            const deletedNote = savedNotes.filter(note => note.id == deleteID);
+            const deletedTitle = deletedNote[0].title;
+
+            resolve({
+                ok: true,
+                deletedTitle: deletedTitle,
+                newSavedNotes: newSavedNotes
+            })
+        })
+    })
+    .then(response => {
+        if (response.ok) {
+            fs.writeFile('db/db.json', JSON.stringify(response.newSavedNotes), (err) => {
+                if (err) {
+                    console.error(err);
+                };
+
+                console.log(`note '${response.deletedTitle}' deleted`);
+
+                return response.newSavedNotes;
+            })
+        };
+    })
+    .then(newSavedNotes => {
+        res.json(JSON.stringify(newSavedNotes));
+    })
+    .catch(err => {
+        console.error(err);
+    });
 });
 
 module.exports = router;
