@@ -40,8 +40,7 @@ router.delete('/notes/:id', (req, res) => {
     // receive query param of id
     const deleteID = req.params.id;
 
-    // use fs.readFile
-    // 
+    // read db.json to get saved notes array
     return new Promise((resolve, reject) => {
         fs.readFile('db/db.json', 'utf8', (err, data) => {
             if (err) {
@@ -65,6 +64,7 @@ router.delete('/notes/:id', (req, res) => {
             })
         })
     })
+    // write new db.json file without deleted note
     .then(response => {
         if (response.ok) {
             fs.writeFile('db/db.json', JSON.stringify(response.newSavedNotes), (err) => {
@@ -74,12 +74,11 @@ router.delete('/notes/:id', (req, res) => {
 
                 console.log(`note '${response.deletedTitle}' deleted`);
 
-                //return response.newSavedNotes;
+                // return newSavedNotes as response to delete api call
                 res.json(response.newSavedNotes);
             })
         };
     })
-    //.then(newSavedNotes => res.json(newSavedNotes))
     .catch(err => console.error(err));
 });
 
