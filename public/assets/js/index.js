@@ -48,7 +48,14 @@ const deleteNote = (id) =>
     headers: {
       'Content-Type': 'application/json',
     },
-  });
+  })
+  .then(location.reload());
+  // .then(response => {
+  //   const savedNotes = JSON.parse(response);
+  //   console.log(savedNotes);
+  //   console.log(response);
+  //   renderNoteList(savedNotes);
+  // })
 
 const renderActiveNote = () => {
   hide(saveNoteBtn);
@@ -88,7 +95,7 @@ const handleNoteDelete = (e) => {
   if (activeNote.id === noteId) {
     activeNote = {};
   }
-
+//debugger;
   deleteNote(noteId).then(() => {
     getAndRenderNotes();
     renderActiveNote();

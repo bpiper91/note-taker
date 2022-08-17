@@ -74,11 +74,12 @@ router.delete('/notes/:id', (req, res) => {
 
                 console.log(`note '${response.deletedTitle}' deleted`);
 
-                return response.newSavedNotes;
+                //return response.newSavedNotes;
+                res.json(response.newSavedNotes);
             })
         };
     })
-    .then(newSavedNotes => res.json(newSavedNotes))
+    //.then(newSavedNotes => res.json(newSavedNotes))
     .catch(err => console.error(err));
 });
 
