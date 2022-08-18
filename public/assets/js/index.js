@@ -89,11 +89,17 @@ const handleNoteDelete = (e) => {
     activeNote = {};
   }
 
-  deleteNote(noteId).then(() => {
-    location.reload();
-    getAndRenderNotes();
-    renderActiveNote();
-  });
+  deleteNote(noteId)
+    .then((response) => {
+      // alternative function to getAnd Render Notes
+      let responseJSON = JSON.parse(response);
+      let responseObj = responseJSON.notes;
+
+      renderNoteList(JSON.stringify(responseObj));
+      renderActiveNote();
+    })
+    // reload page to refresh note list after delete
+    .then(location.reload());
 };
 
 // Sets the activeNote and displays it

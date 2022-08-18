@@ -73,11 +73,18 @@ router.delete('/notes/:id', (req, res) => {
                 };
 
                 console.log(`note '${response.deletedTitle}' deleted`);
-
-                // return newSavedNotes as response to delete api call
-                res.json(response.newSavedNotes);
             })
+            
+            // creat object to hold notes array
+            let newNotesObj = {
+                'notes': response.newSavedNotes
+            };
+
+            return newNotesObj;
         };
+    })
+    .then(newNotesObj => {
+        res.json(newNotesObj)
     })
     .catch(err => console.error(err));
 });
